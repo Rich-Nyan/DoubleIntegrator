@@ -3,10 +3,11 @@ using Plots
 
 function plotter(str::AbstractString)
     T = 100
-    iterations = [1]
+    iterations = ["Initial", "0.001", "0.01", "0.05", "0.1", "0.25"]
+    # iterations = ["Initial", "0.05", "0.01", "0.015", "0.02", "0.025", "0.03"]
     iter = length(iterations)
-    initial_pose = [0,0,0,0]
-    final_pose = [4,4,pi/2,0]
+    initial_pose = [0,0,-1,-1]
+    final_pose = [4,0,-1,-1]
     reader = readlines(str)
     lines = length(reader)
     s = Vector{Float64}(undef,length(reader)*4)
@@ -24,59 +25,41 @@ function plotter(str::AbstractString)
             end
         end
     end
+
     colors = palette(:default)[1:iter]
 
     x_domain = extrema(states[:,:,1]) .+ (-0.5,0.5)
     y_domain = extrema(states[:,:,2]) .+ (-0.5,0.5)
+    # x_domain = extrema([initial_pose[1],final_pose[1]]) .+ (-1,1)
+    # y_domain = extrema([initial_pose[2],final_pose[2]]) .+ (-1,1)
     domain  = [minimum([x_domain[1],y_domain[1]]),maximum([x_domain[2],y_domain[2]])]
-
-    gify = @animate for i=1:1:(iter*T)
+    
+    gify = @animate for i=1:1:T
         player = Int(ceil(i/T))
         timeframe = Int(i - (player - 1) * T)
 
+
         # Setup
-        plot(
+        Plots.plot(
         linewidth = 4,
         label = false,
         xlabel = 'x',
         ylabel = 'y',
-        title = "Self Driving Car",
+        title = "Obstacle Avoidance",
         aspectratio = 1,
         ylimits = domain,
         xlimits = domain,
-        legend = false
         )
-
-        # Previous Players
-        if (player >= 2)
-            for j in 1:player - 1
-                plot!(
-                [states[j,k,1] for k in 1:1:T],
-                [states[j,k,2] for k in 1:1:T],
-                j,
-                linewidth = 1,
-                linecolor = colors[j],
-                label = false
-                )
-                scatter!(
-                [states[j,T,1]],
-                [states[j,T,2]],
-                markersize = 5,
-                color = colors[j],
-                )
-                annotate!(states[j,T,1], states[j,T,2], text(string(j), 8, :black))
-            end
-        end
 
         # Circle
         constrain = 1
         center = (2,0)
         c = x -> (center[1] .+ constrain .* cos.(x), center[2] .+ constrain .* sin.(x)) 
         
-        plot!(
+        Plots.plot!(
             [c(t) for t = range(0, stop=2pi, length=100)],
             linewidth = 1,
-            linecolor = colors[constrain],
+            linecolor = :red,
             seriesalpha = 1,
             # fill = true,
             # fillalpha = 0.1,
@@ -85,41 +68,63 @@ function plotter(str::AbstractString)
         # Current Player
         
         # Trajectory
-        plot!(
-            [states[player,k,1] for k in 1:1:timeframe],
-            [states[player,k,2] for k in 1:1:timeframe],
-            player,
-            linewidth = 1,
-            linecolor = colors[player],
-            label = false
-        )
+        Plots.plot!(
+                [states[1,k,1] for k in 1:1:timeframe],
+                [states[1,k,2] for k in 1:1:timeframe],
+                linewidth = 1,
+                linecolor = colors[1],
+                label = string(iterations[1]),
+                legend=:outertopright
+            )
+        for j in 2:length(iterations)
+            Plots.plot!(
+                [states[j,k,1] for k in 1:1:timeframe],
+                [states[j,k,2] for k in 1:1:timeframe],
+                linewidth = 1,
+                linecolor = colors[j],
+                label = "α = " * string(iterations[j]),
+                legend=:outertopright
+            )
+        end
 
-        scatter!(
+        Plots.scatter!(
             [initial_pose[1]],
             [initial_pose[2]],
             markersize = 5,
-            color = colors[player]
+            color = :black,
+            label = false
         )
-        scatter!(
+        Plots.scatter!(
             [final_pose[1]],
             [final_pose[2]],
             markersize = 5,
-            color = colors[player]
+            color = :black,
+            label = false
         )
         # Points
-        scatter!(
-            [states[player,timeframe,1]],
-            [states[player,timeframe,2]],
-            markersize = 5,
-            color = colors[player]
-        ) 
-        annotate!(states[player,timeframe,1], states[player,timeframe,2], text(string(iterations[player]), 8, :black))
+        for j in 1:length(iterations)
+            Plots.scatter!(
+                [states[j,timeframe,1]],
+                [states[j,timeframe,2]],
+                markersize = 5,
+                color = colors[j],
+                label = false
+            )
+            # Plots.annotate!(states[j,timeframe,1], states[j,timeframe,2], Plots.text(string(iterations[j]), 8, :black))
+        end
+        
+
+
     end
 
     filename = split(str, "/")[end]
     filename = split(filename, ".")[1]
-    gif(gify, "obstacleDIPlots/v2" * filename * ".gif", fps = 15)
+    
+    # labels=["$i" for i in iterations]
+    # Plots.plot(labels, legend=:outertopright)
+
+    gif(gify, "test4/" * filename * ".gif", fps = 15)
 end
 
-plotter("obstacleDITrajectories/v2alpha0e-2.txt")
+plotter("test4/trajectories.txt")
 

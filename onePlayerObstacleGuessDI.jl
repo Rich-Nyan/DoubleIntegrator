@@ -187,4 +187,4 @@ f
 end
 
 # Optimizer
-plonk([0,0,-1,-1],[4,4,-1,-1], [2,2,1.9], 100, "test3/trajectories.txt")
+plonk([0,0,1,0],[4,0,1,0],[2,0,1], 100, "test4/trajectories.txt")
