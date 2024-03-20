@@ -3,7 +3,9 @@ using Plots
 
 function plotter(str::AbstractString)
     T = 100
-    iterations = ["Initial", "0.001", "0.01", "0.05", "0.1", "0.25"]
+    T += 1
+    iterations = ["Initial", "0.0001","0.001", "0.01", "0.05", "0.1", "0.25","0.5"]
+    #iterations = ["Initial", "0.001", "0.01", "0.05", "0.1", "0.25"]
     # iterations = ["Initial", "0.05", "0.01", "0.015", "0.02", "0.025", "0.03"]
     iter = length(iterations)
     initial_pose = [0,0,-1,-1]
@@ -28,10 +30,10 @@ function plotter(str::AbstractString)
 
     colors = palette(:default)[1:iter]
 
-    x_domain = extrema(states[:,:,1]) .+ (-0.5,0.5)
-    y_domain = extrema(states[:,:,2]) .+ (-0.5,0.5)
-    # x_domain = extrema([initial_pose[1],final_pose[1]]) .+ (-1,1)
-    # y_domain = extrema([initial_pose[2],final_pose[2]]) .+ (-1,1)
+    # x_domain = extrema(states[:,:,1]) .+ (-0.5,0.5)
+    # y_domain = extrema(states[:,:,2]) .+ (-0.5,0.5)
+    x_domain = extrema([initial_pose[1],final_pose[1]]) .+ (-1,1)
+    y_domain = extrema([initial_pose[2],final_pose[2]]) .+ (-1,1)
     domain  = [minimum([x_domain[1],y_domain[1]]),maximum([x_domain[2],y_domain[2]])]
     
     gify = @animate for i=1:1:T
@@ -52,7 +54,7 @@ function plotter(str::AbstractString)
         )
 
         # Circle
-        constrain = 1
+        constrain = 1.9
         center = (2,0)
         c = x -> (center[1] .+ constrain .* cos.(x), center[2] .+ constrain .* sin.(x)) 
         
@@ -123,8 +125,8 @@ function plotter(str::AbstractString)
     # labels=["$i" for i in iterations]
     # Plots.plot(labels, legend=:outertopright)
 
-    gif(gify, "test4/" * filename * ".gif", fps = 15)
+    gif(gify, "test5.5/" * filename * ".gif", fps = 15)
 end
 
-plotter("test4/trajectories.txt")
+plotter("test5.5/trajectories.txt")
 

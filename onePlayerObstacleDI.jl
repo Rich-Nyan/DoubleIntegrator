@@ -28,7 +28,7 @@ dt = 0.1
 
 initial_pose = [0,0,1,0]
 final_pose = [4,0,1,0]
-obstacle = [2,0,1]
+obstacle = [2,0,1.9]
 
 z_guess = zeros(10 * T + 4)
 
@@ -210,6 +210,7 @@ function optimizer(file, α)
     
     # Write the trajectory to a file
     open(file, "a") do io
+        println(io, initial_pose[1], ",",initial_pose[2], ",",initial_pose[3], ",", initial_pose[4])
         for i in 1:iter
             for j in 1:T
                 println(io, states[i, j, 1], ",", states[i, j, 2], ",", states[i, j, 3], ",", states[i, j, 4])
@@ -218,7 +219,7 @@ function optimizer(file, α)
     end
 end
 
-α = [0.001, 0.01, 0.05, 0.1, 0.25]
+α = [0.0001,0.001, 0.01, 0.05, 0.1, 0.25, 0.5]
 for i in α
-    optimizer("test4/trajectories.txt",i)
+    optimizer("test5.5/trajectories.txt",i)
 end

@@ -149,6 +149,7 @@ function plonk(x,y, obs, t, file)
                     end
                 
                     open(file, "w") do io
+                        println(io, x[1], ",", x[2], ",", x[3], ",", x[4])
                         for i in 1:t
                             println(io, initial_trajectory[4*i-3], ",", initial_trajectory[4*i-2], ",", initial_trajectory[4*i-1], ",", initial_trajectory[4*i])
                         end
@@ -187,4 +188,4 @@ f
 end
 
 # Optimizer
-plonk([0,0,1,0],[4,0,1,0],[2,0,1], 100, "test4/trajectories.txt")
+plonk([0,0,1,0],[4,0,1,0],[2,0,1.9], 100, "test5/trajectories.txt")
