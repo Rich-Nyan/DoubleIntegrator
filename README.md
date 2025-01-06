@@ -1,6 +1,6 @@
 # Log Barriers in Multiplayer Collision-Avoidance Systems
 
-![](3_Players_2.gif)
+![](2_Players_2.gif)
 
 Multiplayer collision-avoidance trajectory generation using log-barriers constraints and learning based on user-generated trajectories.
 
