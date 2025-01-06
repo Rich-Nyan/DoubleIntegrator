@@ -1,14 +1,14 @@
 # Log Barriers in Multiplayer Collision-Avoidance Systems
 
 ![](3_Players_2.gif)
+
 Multiplayer collision-avoidance trajectory generation using log-barriers constraints and learning based on user-generated trajectories.
 
 This repository consists of an optimal solver for obstacle avoidance and multiplayer collision-avoidance.
 
 ## Components
 
-- GuessDI.jl: Generates an initial state vector using user-provided mouse clicks off of Julia Makie.
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Sq7j29FNwpI" frameborder="0" allowfullscreen></iframe>
+- GuessDI.jl: [Generates](https://www.youtube.com/embed/Sq7j29FNwpI) an initial state vector using user-provided mouse clicks off of Julia Makie.
 - DI.jl: Optimal trajectory solver for various alpha values using fed-in initial state vector.
 - Plotting.jl: Generates a gif consisting of user-fed trajectories followed by optimal trajectory.
 
